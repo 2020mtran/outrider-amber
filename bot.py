@@ -59,7 +59,7 @@ async def get_role(interaction: discord.Interaction, role_name: str):
 
     if role:
         await interaction.user.add_roles(role)
-        await interaction.response.send_message(f'You have been assigned the role: {role.name}', ephemeral=True)
+        await interaction.response.send_message(f'You have been assigned the role: {role.name}')
     else:
         await interaction.response.send_message('Role not found. Please use one of the following: common, uncommon, rare, epic, legendary.', ephemeral=True)
 
@@ -80,7 +80,7 @@ async def remove_role(interaction: discord.Interaction, role_name: str):
 
     if role and role in interaction.user.roles:
         await interaction.user.remove_roles(role)
-        await interaction.response.send_message(f'The role {role.name} has been removed from you.', ephemeral=True)
+        await interaction.response.send_message(f'The role {role.name} has been removed from you.')
     else:
         await interaction.response.send_message('Role not found or you do not have this role. Please use one of the following: common, uncommon, rare, epic, legendary.', ephemeral=True)
 
