@@ -23,7 +23,7 @@ legendaryRole = None
 
 @client.event
 async def on_ready():
-    print(f'Outrider Amber, reporting!')
+    print(f'The Shorekeeper, ready.')
 
     guild = client.get_guild(int(os.getenv('GUILD_ID')))
     if guild is None:
@@ -40,7 +40,7 @@ async def on_ready():
 
     startup_channel = guild.get_channel(int(os.getenv('STARTUP_CHANNEL_ID')))
     if startup_channel:
-        await startup_channel.send('Outrider Amber, reporting for duty!')
+        await startup_channel.send('I`ll fulfill it, be it a direct command or any other wish you have.')
 
     # Sync the command tree with the guild
     await tree.sync(guild=guild)
