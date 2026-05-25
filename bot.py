@@ -95,7 +95,7 @@ async def on_message(message):
     if message.author.id != fuuka_id and message.author.id != ra_id:
         return
     
-    if "This Discord is linked to a series, so Fuuka spawned 3 characters from it." in message.content:
+    if "This Discord is linked to a series, so Fuuka" in message.content:
         # pattern = r'\((\d+)\s*wl\)'
         # match = re.search(pattern, message.content)
         # await message.channel.send(f'Found an edition, now determining its worth...')
