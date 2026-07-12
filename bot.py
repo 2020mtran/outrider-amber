@@ -15,11 +15,11 @@ fuuka_id = 1230570999833952287
 ra_id = 184864181663563776
 
 # Initialize global variables
-wuwaDropRole = None
-serverDropRole = None
-rareDropRole = None
-epicRole = None
-legendaryRole = None
+# wuwaDropRole = None
+# serverDropRole = None
+# rareDropRole = None
+# epicRole = None
+# legendaryRole = None
 
 @client.event
 async def on_ready():
@@ -85,9 +85,9 @@ async def on_message(message):
         return
     
     if "This Discord is linked to a series, so Fuuka" in message.content:
-        await message.channel.send(f'{wuwaDropRole.mention} Ordained. The Wuwa drop is here.')
+        await message.channel.send(f'{wuwaDrop.mention} Ordained. The Wuwa drop is here.')
 
     if "Fuuka is dropping cards! Click to claim !" in message.content:
-        await message.channel.send(f'{serverDropRole.mention} Server drop manifested.')
+        await message.channel.send(f'{serverDrop.mention} Server drop manifested.')
 
 client.run(DISCORD_TOKEN)
