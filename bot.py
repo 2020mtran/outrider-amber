@@ -35,8 +35,8 @@ async def on_ready():
     serverDrop = discord.utils.get(guild.roles, id=int(os.getenv('UNCOMMON_ID')))
 
     startup_channel = guild.get_channel(int(os.getenv('STARTUP_CHANNEL_ID')))
-    if startup_channel:
-        await startup_channel.send('I`ll fulfill it, be it a direct command or any other wish you have.')
+    # if startup_channel:
+    #     await startup_channel.send('I`ll fulfill it, be it a direct command or any other wish you have.')
 
     # Sync the command tree with the guild
     await tree.sync(guild=guild)
