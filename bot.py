@@ -17,7 +17,7 @@ ra_id = 184864181663563776
 # Initialize global variables
 wuwaDropRole = None
 serverDropRole = None
-rareRole = None
+rareDropRole = None
 epicRole = None
 legendaryRole = None
 
@@ -30,9 +30,10 @@ async def on_ready():
         print(f'Guild with ID {os.getenv("GUILD_ID")} not found.')
         return
     
-    global wuwaDrop, serverDrop
+    global wuwaDrop, serverDrop, rareDrop
     wuwaDrop = discord.utils.get(guild.roles, id=int(os.getenv('COMMON_ID')))
     serverDrop = discord.utils.get(guild.roles, id=int(os.getenv('UNCOMMON_ID')))
+    rareDrop = discord.utils.get(guild.roles, id=int(os.getenv('RARE_ID')))
 
     startup_channel = guild.get_channel(int(os.getenv('STARTUP_CHANNEL_ID')))
     # if startup_channel:
@@ -41,7 +42,7 @@ async def on_ready():
     # Sync the command tree with the guild
     await tree.sync(guild=guild)
 
-@tree.command(name="getrole", description="Assign yourself a drop ping role (wuwa | server).", guild=discord.Object(id=GUILD_ID))
+@tree.command(name="getrole", description="Assign yourself a drop ping role (wuwa | server | rare).", guild=discord.Object(id=GUILD_ID))
 async def get_role(interaction: discord.Interaction, role_name: str):
     role = None
 
@@ -49,27 +50,31 @@ async def get_role(interaction: discord.Interaction, role_name: str):
         role = wuwaDrop
     elif role_name.lower() == "server":
         role = serverDrop
+    elif role_name.lower() == "rare":
+        role = rareDrop
 
     if role:
         await interaction.user.add_roles(role)
         await interaction.response.send_message(f'You have been assigned the role: {role.name}')
     else:
-        await interaction.response.send_message('Role not found. Please use one of the following: (wuwa | server)', ephemeral=True)
+        await interaction.response.send_message('Role not found. Please use one of the following: (wuwa | server | rare)', ephemeral=True)
 
-@tree.command(name="removerole", description="Remove a role from yourself (wuwa | server)", guild=discord.Object(id=GUILD_ID))
+@tree.command(name="removerole", description="Remove a role from yourself (wuwa | server | rare)", guild=discord.Object(id=GUILD_ID))
 async def remove_role(interaction: discord.Interaction, role_name: str):
     role = None
 
     if role_name.lower() == "wuwa":
         role = wuwaDrop
-    elif role_name.lower() == "uncommon":
+    elif role_name.lower() == "server":
         role = serverDrop
+    elif role_name.lower() == "rare":
+        role = rareDrop
 
     if role and role in interaction.user.roles:
         await interaction.user.remove_roles(role)
         await interaction.response.send_message(f'The role {role.name} has been removed from you.')
     else:
-        await interaction.response.send_message('Role not found or you do not have this role. Please use one of the following: wuwa | server.', ephemeral=True)
+        await interaction.response.send_message('Role not found or you do not have this role. Please use one of the following: (wuwa | server | rare)', ephemeral=True)
 
 @client.event
 async def on_message(message):
