@@ -15,8 +15,8 @@ fuuka_id = 1230570999833952287
 ra_id = 184864181663563776
 
 # Initialize global variables
-commonRole = None
-uncommonRole = None
+wuwaDropRole = None
+serverDropRole = None
 rareRole = None
 epicRole = None
 legendaryRole = None
@@ -30,13 +30,9 @@ async def on_ready():
         print(f'Guild with ID {os.getenv("GUILD_ID")} not found.')
         return
     
-    global commonRole
-    # , uncommonRole, rareRole, epicRole, legendaryRole
-    commonRole = discord.utils.get(guild.roles, id=int(os.getenv('COMMON_ID')))
-    # uncommonRole = discord.utils.get(guild.roles, id=int(os.getenv('UNCOMMON_ID')))
-    # rareRole = discord.utils.get(guild.roles, id=int(os.getenv('RARE_ID')))
-    # epicRole = discord.utils.get(guild.roles, id=int(os.getenv('EPIC_ID')))
-    # legendaryRole = discord.utils.get(guild.roles, id=int(os.getenv('LEGENDARY_ID')))
+    global wuwaDrop, serverDrop
+    wuwaDrop = discord.utils.get(guild.roles, id=int(os.getenv('COMMON_ID')))
+    serverDrop = discord.utils.get(guild.roles, id=int(os.getenv('UNCOMMON_ID')))
 
     startup_channel = guild.get_channel(int(os.getenv('STARTUP_CHANNEL_ID')))
     if startup_channel:
@@ -45,47 +41,35 @@ async def on_ready():
     # Sync the command tree with the guild
     await tree.sync(guild=guild)
 
-@tree.command(name="getrole", description="Assign yourself a role (common, uncommon, rare, epic, legendary)", guild=discord.Object(id=GUILD_ID))
+@tree.command(name="getrole", description="Assign yourself a drop ping role (wuwa | server).", guild=discord.Object(id=GUILD_ID))
 async def get_role(interaction: discord.Interaction, role_name: str):
     role = None
 
-    if role_name.lower() == "common":
-        role = commonRole
-    # elif role_name.lower() == "uncommon":
-    #     role = uncommonRole
-    # elif role_name.lower() == "rare":
-    #     role = rareRole
-    # elif role_name.lower() == "epic":
-    #     role = epicRole
-    # elif role_name.lower() == "legendary":
-    #     role = legendaryRole
+    if role_name.lower() == "wuwa":
+        role = wuwaDrop
+    elif role_name.lower() == "server":
+        role = serverDrop
 
     if role:
         await interaction.user.add_roles(role)
         await interaction.response.send_message(f'You have been assigned the role: {role.name}')
     else:
-        await interaction.response.send_message('Role not found. Please use one of the following: common, uncommon, rare, epic, legendary.', ephemeral=True)
+        await interaction.response.send_message('Role not found. Please use one of the following: (wuwa | server)', ephemeral=True)
 
-@tree.command(name="removerole", description="Remove a role from yourself", guild=discord.Object(id=GUILD_ID))
+@tree.command(name="removerole", description="Remove a role from yourself (wuwa | server)", guild=discord.Object(id=GUILD_ID))
 async def remove_role(interaction: discord.Interaction, role_name: str):
     role = None
 
-    if role_name.lower() == "common":
-        role = commonRole
-    # elif role_name.lower() == "uncommon":
-    #     role = uncommonRole
-    # elif role_name.lower() == "rare":
-    #     role = rareRole
-    # elif role_name.lower() == "epic":
-    #     role = epicRole
-    # elif role_name.lower() == "legendary":
-    #     role = legendaryRole
+    if role_name.lower() == "wuwa":
+        role = wuwaDrop
+    elif role_name.lower() == "uncommon":
+        role = serverDrop
 
     if role and role in interaction.user.roles:
         await interaction.user.remove_roles(role)
         await interaction.response.send_message(f'The role {role.name} has been removed from you.')
     else:
-        await interaction.response.send_message('Role not found or you do not have this role. Please use one of the following: common, uncommon, rare, epic, legendary.', ephemeral=True)
+        await interaction.response.send_message('Role not found or you do not have this role. Please use one of the following: wuwa | server.', ephemeral=True)
 
 @client.event
 async def on_message(message):
@@ -96,31 +80,9 @@ async def on_message(message):
         return
     
     if "This Discord is linked to a series, so Fuuka" in message.content:
-        # pattern = r'\((\d+)\s*wl\)'
-        # match = re.search(pattern, message.content)
-        # await message.channel.send(f'Found an edition, now determining its worth...')
-        # await message.channel.send(f'Matching: {match}')
+        await message.channel.send(f'{wuwaDropRole.mention} Ordained. The Wuwa drop is here.')
 
-        # if match:
-            # target_str = match.group(1) # this gets whatever is in the parentheses
-            # target = int(target_str)
-            # await message.channel.send(f'Wishlist is: {target_str}')
-
-            # if target >= 100 and target < 200:
-            #     role = commonRole
-            # elif target >= 200 and target < 500:
-            #     role = uncommonRole
-            # elif target >= 500 and target < 1000:
-            #     role = rareRole
-            # elif target >= 1000 and target < 2000:
-            #     role = epicRole
-            # elif target >= 2000:
-            #     role = legendaryRole
-            # else:
-            #     role = None
-            
-            # if role: 
-            #     await message.channel.send(f'{role.mention} A new edition has dropped!')
-        await message.channel.send(f'{commonRole.mention} wuwa drop!!!')
+    if "Fuuka is dropping cards! Click to claim !" in message.content:
+        await message.channel.send(f'{serverDropRole.mention} Server drop manifested.')
 
 client.run(DISCORD_TOKEN)
