@@ -14,28 +14,21 @@ tree = app_commands.CommandTree(client)
 fuuka_id = 1230570999833952287
 ra_id = 184864181663563776
 
-# Initialize global variables
-# wuwaDropRole = None
-# serverDropRole = None
-# rareDropRole = None
-# epicRole = None
-# legendaryRole = None
-
 @client.event
 async def on_ready():
     print(f'The Shorekeeper, ready.')
 
-    guild = client.get_guild(int(os.getenv('GUILD_ID')))
+    guild = client.get_guild(int(GUILD_ID))
     if guild is None:
-        print(f'Guild with ID {os.getenv("GUILD_ID")} not found.')
+        print(f'Guild with ID {GUILD_ID} not found.')
         return
     
     global wuwaDrop, serverDrop, rareDrop
-    wuwaDrop = discord.utils.get(guild.roles, id=int(os.getenv('COMMON_ID')))
-    serverDrop = discord.utils.get(guild.roles, id=int(os.getenv('UNCOMMON_ID')))
-    rareDrop = discord.utils.get(guild.roles, id=int(os.getenv('RARE_ID')))
+    wuwaDrop = discord.utils.get(guild.roles, id=int(COMMON_ID))
+    serverDrop = discord.utils.get(guild.roles, id=int(UNCOMMON_ID))
+    rareDrop = discord.utils.get(guild.roles, id=int(RARE_ID))
 
-    startup_channel = guild.get_channel(int(os.getenv('STARTUP_CHANNEL_ID')))
+    startup_channel = guild.get_channel(int(STARTUP_CHANNEL_ID))
     # if startup_channel:
     #     await startup_channel.send('I`ll fulfill it, be it a direct command or any other wish you have.')
 
