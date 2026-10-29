@@ -3,6 +3,7 @@ from discord import app_commands
 import re
 import os
 from config import DISCORD_TOKEN, GUILD_ID, STARTUP_CHANNEL_ID, COMMON_ID, UNCOMMON_ID, RARE_ID, EPIC_ID, LEGENDARY_ID
+import asyncio
 
 # Discord Client Initialization
 intents = discord.Intents.default()
@@ -75,6 +76,33 @@ async def on_message(message):
         return
     
     if message.author.id != fuuka_id and message.author.id != ra_id:
+        return
+
+    # Handle reminders: "tt 22"
+    match = re.fullmatch(r"tt\s+(\d+)", message.content.strip(), re.IGNORECASE)
+
+    if match:
+        minutes = int(match.group(1))
+
+        if minutes < 1:
+            await message.reply("Please enter a reminder time of at least 1 minute.")
+            return
+
+        if minutes > 1440:
+            await message.reply("The maximum reminder time is 1440 minutes (1 day).")
+            return
+
+        # Confirm that the reminder was created
+        await message.reply(f"I've marked this moment among the stars. I'll call for you when the time comes ({minutes} minutes)")
+
+        # Schedule the reminder without blocking the bot
+        async def send_reminder():
+            await asyncio.sleep(minutes * 60)
+            await message.channel.send(
+                f"The moment has arrived, Rover. It's time to return {message.author.mention}."
+            )
+
+        asyncio.create_task(send_reminder())
         return
     
     if "This Discord is linked to a series, so Fuuka" in message.content:
