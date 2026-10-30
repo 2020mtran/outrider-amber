@@ -75,13 +75,13 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.author.id != fuuka_id and message.author.id != ra_id:
+    if message.author.bot and message.author.id != fuuka_id:
         return
 
     # Handle reminders: "tt 22"
     match = re.fullmatch(r"tt\s+(\d+)", message.content.strip(), re.IGNORECASE)
 
-    if match:
+    if match and not message.author.bot:
         minutes = int(match.group(1))
 
         if minutes < 1:
@@ -103,6 +103,9 @@ async def on_message(message):
             )
 
         asyncio.create_task(send_reminder())
+        return
+
+    if message.author.id != fuuka_id and message.author.id != ra_id:
         return
     
     if "This Discord is linked to a series, so Fuuka" in message.content:
